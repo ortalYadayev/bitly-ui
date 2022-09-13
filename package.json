@@ -1,0 +1,37 @@
+{
+    "name": "ui",
+    "version": "1.0.0",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build",
+        "serve": "vite preview",
+        "lint": "eslint src --ext .js,.vue",
+        "lint:fix": "eslint src --ext .js,.vue --fix",
+        "format": "prettier --config .prettierrc '**/*.(js|json|md)' --write"
+    },
+    "dependencies": {
+        "@vuelidate/core": "^2.0.0-alpha.41",
+        "@vuelidate/validators": "^2.0.0-alpha.29",
+        "axios": "^0.26.1",
+        "vue": "^3.2.16",
+        "vue-router": "^4.0.11",
+        "vuex": "^4.0.2"
+    },
+    "devDependencies": {
+        "@vitejs/plugin-vue": "^1.10.2",
+        "@vue/eslint-config-prettier": "^7.0.0",
+        "autoprefixer": "^10.3.7",
+        "eslint": "^7.32.0",
+        "eslint-config-airbnb-base": "^15.0.0",
+        "eslint-config-prettier": "^8.3.0",
+        "eslint-plugin-import": "^2.26.0",
+        "eslint-plugin-vue": "^7.19.1",
+        "postcss": "^8.3.9",
+        "prettier": "^2.6.2",
+        "prettier-plugin-tailwindcss": "^0.1.8",
+        "sass": "^1.42.1",
+        "tailwindcss": "^2.2.16",
+        "vite": "^2.6.4",
+        "vite-svg-loader": "^3.1.2"
+    }
+}
