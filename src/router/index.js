@@ -1,11 +1,17 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '/src/views/Home.vue'
+import Home from '../views/Home.vue'
+import RedirectPage from '../views/RedirectPage.vue'
 
 const routes = [
     {
         path: '/',
         name: 'Home',
         component: Home,
+    },
+    {
+        path: '/:id',
+        name: 'RedirectPage',
+        component: RedirectPage,
     },
 ]
 const router = createRouter({

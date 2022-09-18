@@ -1,84 +1,24 @@
 <template>
-  <div class="full-size-table rounded-lg sm:shadow-lg overflow-scroll mt-10 mx-4 lg:mx-10">
-    <table class="unresponsive-table w-full bg-white overflow-hidden shadow-lg text-center">
-      <thead class="text-white">
-        <tr class="bg-secondary-color table-row rounded-l-lg sm:rounded-none">
-          <th class="p-3 sm:w-40">
-            מוסד
-          </th>
-          <th class="p-3 sm:w-40">
-            תעודת זהות
-          </th>
-          <th class="p-3 sm:w-40">
-            שם משפחה
-          </th>
-          <th class="p-3 sm:w-40">
-            שם פרטי
-          </th>
-          <th class="p-3 sm:w-40">
-            ארץ לידה
-          </th>
-          <th class="p-3 sm:w-40">
-            תאריך לידה
-          </th>
-          <th class="p-3 sm:w-40">
-            תאריך עלייה
-          </th>
-          <th class="p-3 sm:w-40">
-            מין
-          </th>
-          <th class="p-3 sm:w-40">
-            לאום
-          </th>
-          <th class="p-3 sm:w-40">
-            טלפון בבית
-          </th>
-          <th class="p-3 sm:w-40">
-            טלפון נייד
-          </th>
-          <th class="p-3 sm:w-40">
-            אימייל
-          </th>
-        </tr>
-      </thead>
-
-      <tbody class="flex-1 sm:flex-none">
-        <tr v-for="(student, index) in students" :key="index">
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.institution }}
+  <div class="full-size-table rounded-lg sm:shadow-lg overflow-scroll mt-10">
+    <table class="w-full bg-white shadow-lg">
+      <tbody class="">
+        <tr v-for="(link, index) in store.state.links" :key="index" class="border-gray border-b hover:bg-gray">
+          <td class="flex-1 p-5">
+            {{ link.shortLink }}
           </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.id_student }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.birthDate }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.lastName }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.birthCountry }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.firstName }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.immigration }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.gender }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.nation }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.homePhone }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.mobilePhone }}
-          </td>
-          <td class="border-gray border-t border-l hover:bg-primary-color hover:text-gray p-3">
-            {{ student.email }}
+          <td class="flex justify-end items-center p-5">
+            <div class="text-blue-600">
+              <a :href="link.longLink" :class="'link-'+index" target="_blank">
+                {{ link.longLink }}
+              </a>
+            </div>
+            <button
+              @click="copyURL(index)"
+              class="duration-300 text-gray rounded-lg px-5 py-2 ml-10"
+              :class="indexCopy === index ? 'bg-green-600' : 'bg-secondary-color opacity-80 hover:opacity-100'"
+            >
+              {{ indexCopy == index ? 'copied' : 'copy' }}
+            </button>
           </td>
         </tr>
       </tbody>
@@ -87,43 +27,25 @@
 </template>
 
 <script setup>
-// import { ref } from "vue";
-import { useStore } from 'vuex';
+import { useStore } from "vuex";
+import { ref } from "vue";
+import useClipboard from 'vue-clipboard3'
 
-// const store = useStore();
-// const students = ref([]);
+const store = useStore();
 
-// setTimeout(() =>
-//     getStudents()
-        // , 0);
+const indexCopy = ref(null);
+const { toClipboard } = useClipboard()
 
-// async function getStudents() {
-//   const response = await store.dispatch('getStudents');
-//   students.value = response.data;
-// }
-const props = defineProps({
-  students: {
-    required: false,
-    type: [Array, null],
-  }
-});
-// console.log(students)
-</script>
+async function copyURL(indexLink) {
+  const link = store.state.links[indexLink];
 
-<style lang="scss" scoped>
-.unresponsive-table {
-  display: inline-table !important;
-  thead > tr:not(:first-child) {
-    display: none;
-  }
+  try {
+    await toClipboard(link.shortLink);
 
-  td, th {
-    height: 50px !important;
-    white-space: nowrap;
-  }
-
-  th:not(:last-child) {
-    border-bottom: 2px solid rgba(0, 0, 0, .1);
+    indexCopy.value = indexLink;
+    setTimeout(() => indexCopy.value = null, 2000);
+  } catch (e) {
+    console.error(e)
   }
 }
-</style>
+</script>

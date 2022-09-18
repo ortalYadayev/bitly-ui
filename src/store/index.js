@@ -3,30 +3,37 @@ import axiosInstance from "../_helpers/axios";
 
 const store = createStore({
     state: {
-        prevInstitution: localStorage.getItem('prevInstitution') || null,
+        links: JSON.parse(localStorage.getItem('links')) || [],
     },
     getters: {},
     mutations: {
-        setPrevInstitution(state, institution) {
-            state.prevInstitution = institution
-            localStorage.setItem('prevInstitution', institution)
+        setLinks(state, links) {
+            state.links.unshift(links);
+
+            localStorage.setItem('links', JSON.stringify(state.links));
         },
 
-        removePrevInstitution(state) {
-            state.prevInstitution = null;
-            localStorage.removeItem('prevInstitution');
+        removeLinks(state) {
+            state.links = null;
+            localStorage.removeItem('links');
         },
     },
     actions: {
-        async sign({commit}, payload) {
-            commit('setPrevInstitution', payload.institution);
-            return await axiosInstance.post('/sign', payload);
+        async createShortLink({commit}, payload) {
+            const response = await axiosInstance.post('/short-link', {
+                longLink: payload.longLink
+            });
+
+            commit('setLinks', {
+                shortLink: response.data.shortLink,
+                longLink: response.data.longLink
+            });
+
+            return response;
         },
-        async getStudents() {
-            return await axiosInstance.get('/students');
-        },
-        async getLastStudent() {
-            return await axiosInstance.get('/get-student');
+
+        async getLongLink({}, url) {
+            return await axiosInstance.post('/redirect-link', { url });
         },
     },
 })
